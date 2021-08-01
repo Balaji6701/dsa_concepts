@@ -1,0 +1,51 @@
+package com.company;
+
+import java.util.*;
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        char[] word = sc.nextLine().toCharArray();
+        char[] pattern = sc.nextLine().toCharArray();
+        int[] lps = findLps(pattern.length, pattern);
+        int i = 0,j = 0;
+        int count = 0;
+        while(i< word.length){
+            if(pattern[j] == word[i]){
+                i++;
+                j++;
+            }else{
+                if(j != 0){
+                    j = lps[j-1];
+                }else{
+                    i++;
+                }
+            }
+            if(j>=pattern.length){
+                j = lps[j-1];
+                count++;
+            }
+        }
+        System.out.print(count);
+    }
+    public static int[] findLps(int n,char[] pattern){
+        int i=0,j=1;
+        int[] lps = new int[n];
+        lps[i] = 0;
+        while(j<n){
+            if(pattern[i] == pattern[j]){
+                i++;
+                lps[j] = i;
+                j++;
+            }else{
+                if(i!= 0){
+                    i = lps[i-1];
+                }else{
+                    lps[i] = 0;
+                    j++;
+                }
+            }
+        }
+        return lps;
+    }
+}
