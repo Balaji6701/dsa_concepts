@@ -1,0 +1,76 @@
+package com.company;
+
+import java.util.*;
+import java.util.Map.*;
+
+class Customer implements Comparable<Customer> {
+    final long arrival;
+    final Long end;
+
+    public Customer(long start, long end) {
+        this.arrival = start;
+        this.end = end;
+    }
+
+    @Override
+    public int compareTo(Customer other) {
+        return (this.end.compareTo(other.end)); //to sort the orders map based on exit time;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "arrival=" + arrival +
+                ", end=" + end +
+                '}';
+    }
+}
+
+public class Main {
+
+    public static long computeMinAverage(NavigableMap<Long, List<Customer>> bankQueue) {
+        PriorityQueue<Customer> waitingQueue = new PriorityQueue<>();
+        long currTime = 0;
+        long totalwaitTime = 0;
+
+        while (!bankQueue.isEmpty() || !waitingQueue.isEmpty()) {
+            if (waitingQueue.isEmpty()) {
+                //if the line is empty, the first customer goes in
+                Entry<Long, List<Customer>> firstEntry = bankQueue.pollFirstEntry();
+                System.out.println(firstEntry);
+                waitingQueue.addAll(firstEntry.getValue());
+                currTime = firstEntry.getKey();
+                System.out.println("current time: " + currTime);
+            } else {
+                Customer nextCustomer = waitingQueue.poll();
+                currTime += nextCustomer.end;
+                /*
+                // total wait time = if the previous customer comes at 0th second, uses 4 seconds,and the next
+                customer comes at 2nd sec, then the next customer waits for 2 seconds only :)
+                */
+                totalwaitTime += currTime - nextCustomer.arrival;
+                //returns a map where the arrival times are less than current time(We can't wait longer:))
+                NavigableMap<Long, List<Customer>> arrivals = bankQueue.headMap(currTime, true);
+                System.out.println("Current Time: " + currTime);
+                //adding all the customers to the waiting queue
+                arrivals.values()
+                        .forEach(waitingQueue::addAll);
+                arrivals.clear();//cleaning the list to prevent memory overflow :) waste
+            }
+        }
+        return totalwaitTime;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        NavigableMap<Long, List<Customer>> bankQueue = new TreeMap<>();
+        int n = sc.nextInt();
+        for (int i = 0; i < n; i++) {
+            Customer customer = new Customer(sc.nextInt(), sc.nextInt());
+            //adds the customer to a new list if and only if there is no previous customer with same arrival time
+            bankQueue.computeIfAbsent(customer.arrival, e -> new ArrayList<>()).add(customer);
+        }
+        //System.out.println("Bank queue: "+ bankQueue);
+        System.out.println(computeMinAverage(bankQueue) / n);
+    }
+}
