@@ -1,0 +1,87 @@
+package com.company;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+class Node{
+    int value;
+    Node right,left;
+
+    public Node(int value) {
+        this.value = value;
+        this.right = null;
+        this.left = null;
+    }
+}
+class BinaryTree{
+    Node root;
+    public BinaryTree(){
+        root=null;
+    }
+    public BinaryTree(int value){
+        root = new Node(value);
+    }
+    public void inOrder(Node temp){
+        if(temp == null){
+            return;
+        }
+        inOrder(temp.left);
+        System.out.print(temp.value +", ");
+        inOrder(temp.right);
+    }
+    public void postOrder(Node temp){
+        if(temp == null){
+            return;
+        }
+        inOrder(temp.left);
+        inOrder(temp.right);
+        System.out.print(temp.value +", ");
+    }
+    public void preOrder(Node temp){
+        if(temp == null){
+            return;
+        }
+        System.out.print(temp.value +", ");
+        inOrder(temp.left);
+        inOrder(temp.right);
+    }
+    public void insertNode(Node temp,int value){
+        if(temp == null){
+            root = new Node(value);
+            return;
+        }
+        Queue<Node> q = new LinkedList<>();
+        q.add(temp);
+        while (!q.isEmpty()){
+            temp = q.poll();
+            if(temp.left == null){
+                temp.left = new Node(value);
+                break;
+            }else {
+                q.add(temp.left);
+            }
+            if(temp.right == null){
+                temp.right = new Node(value);
+                break;
+            }else {
+                q.add(temp.right);
+            }
+        }
+    }
+}
+public class Main {
+
+    public static void main(String[] args) {
+        BinaryTree tree = new BinaryTree();
+        for(int i = 0; i <5;i++){
+            tree.insertNode(tree.root, i);
+        }
+        System.out.println("Inorder:");
+        tree.inOrder(tree.root);
+        System.out.println("\nPreorder");
+        tree.preOrder(tree.root);
+        System.out.println("\nPostOrder");
+        tree.postOrder(tree.root);
+    }
+}
+
