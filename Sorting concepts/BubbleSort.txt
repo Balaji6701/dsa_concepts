@@ -1,0 +1,33 @@
+package com.company;
+
+import java.util.Arrays;
+
+public class Main {
+
+    public static String bubbleSort(int[] arr, boolean reverse) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = 0; j < arr.length - 1 - i; j++) {
+                if (reverse) {
+                    if (arr[j] < arr[j + 1]) {
+                        int temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                    }
+                } else {
+                    if (arr[j] > arr[j + 1]) {
+                        int temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                    }
+                }
+            }
+        }
+        return Arrays.toString(arr);
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {99, 105, 22, 7, 0, 44, 12, 64};
+        System.out.println(bubbleSort(arr, false));
+    }
+}
+
