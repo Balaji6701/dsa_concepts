@@ -1,0 +1,65 @@
+package com.company;
+
+import java.util.Arrays;
+
+class MergeSort {
+    private final int[] arr;
+
+    public MergeSort(int[] arr) {
+        this.arr = arr;
+    }
+
+    public void merge(int left, int mid, int right) {
+        int size1 = mid - left + 1;
+        int size2 = right - mid;
+        int[] tempArr1 = new int[size1];
+        int[] tempArr2 = new int[size2];
+        System.arraycopy(arr, left, tempArr1, 0, size1);
+        System.arraycopy(arr, mid + 1, tempArr2, 0, size2);
+        int k = left;
+        int i = 0, j = 0;
+        while (i < size1 && j < size2) {
+            if (tempArr1[i] <= tempArr2[j]) {
+                arr[k] = tempArr1[i];
+                i++;
+            } else {
+                arr[k] = tempArr2[j];
+                j++;
+            }
+            k++;
+        }
+        if (i < size1) {
+            System.arraycopy(tempArr1, i, arr, k, size1 - i);
+            k += size1 - i;
+        }
+        if (j < size2) {
+            System.arraycopy(tempArr2, j, arr, k, size2 - j);
+        }
+        System.out.println(Arrays.toString(arr));
+    }
+
+    public void sort(int left, int right) {
+        if (left < right) {
+            int mid = left + (right - left) / 2;
+            sort(left, mid);
+            sort(mid + 1, right);
+            merge(left, mid, right);
+        }
+    }
+
+    public String printArray() {
+        return Arrays.toString(this.arr);
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+        int[] arr = {12, 11, 13, 5, 6, 7};
+        MergeSort sort = new MergeSort(arr);
+        sort.sort(0, arr.length - 1);
+        System.out.println(sort.printArray());
+
+    }
+}
+
